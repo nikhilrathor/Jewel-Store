@@ -1,20 +1,20 @@
 var mongoose = require('mongoose');
 
 var PageSchema = mongoose.Schema({
-    title:{
+    title: {
         type: String,
         required: true
     },
-    slug:{
+    slug: {
         type: String,
     },
-    content:{
+    content: {
         type: String,
         required: true
     },
-    sorting:{
+    sorting: {
         type: Number,
     }
 });
 
-var Page = module.exports = mongoose.model('Page',PageSchema);
+var Page = module.exports = mongoose.model('Page', PageSchema);

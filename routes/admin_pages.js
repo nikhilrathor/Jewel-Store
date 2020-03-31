@@ -4,8 +4,12 @@ var router = express.Router();
 var Page = require('../models/page')
 
 router.get('/', function (req, res) {
-    res.send('Admin Area')
-})
+    Page.find({}).sort({ sorting: 1 }).exec(function (err, pages) {
+        res.render('admin/pages', {
+            pages: pages
+        });
+    });
+});
 
 router.get('/add-page', function (req, res) {
 
@@ -57,7 +61,7 @@ router.post('/add-page', function (req, res) {
                     title: title,
                     slug: slug,
                     content: content,
-                    sorting: 0
+                    sorting: 100
                 });
                 page.save(function (err) {
                     if (err)

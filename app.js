@@ -5,6 +5,7 @@ var config = require('./config/database');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var expressValidator = require('express-validator');
+const ejsLint = require('ejs-lint');
 
 mongoose.connect(config.database, { useUnifiedTopology: true, useNewUrlParser: true });
 var db = mongoose.connection;
