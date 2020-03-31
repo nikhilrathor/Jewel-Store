@@ -20,6 +20,8 @@ app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+//set global eroors variable
+app.locals.errors = null;
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
