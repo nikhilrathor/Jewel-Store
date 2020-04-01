@@ -62,91 +62,59 @@ router.post('/add-category', function (req, res) {
 
 });
 
-router.post('/reorder-pages', function (req, res) {
-    var ids = req.body['id[]'];
 
-    var count = 0;
+router.get('/edit-category/:id', function (req, res) {
 
-    for (var i = 0; i < ids.length; i++) {
-        var id = ids[i];
-        count++;
-
-        (function (count) {
-            Page.findById(id, function (err, page) {
-                page.sorting = count;
-                page.save(function (err) {
-                    if (err)
-                        return console.log(err);
-                });
-            });
-        })(count);
-    }
-});
-
-
-router.get('/edit-page/:slug', function (req, res) {
-
-    Page.findOne({ slug: req.params.slug }, function (err, page) {
+    Category.findById(req.params.id.trim(), function (err, category) {
         if (err) {
-            return console.log(err);
+            return console.log(err); 
         }
-        res.render('admin/edit_page', {
-            title: page.title,
-            slug: page.slug,
-            content: page.content,
-            id: page._id
+        res.render('admin/edit_category', {
+            title: category.title,
+            id: category._id
         });
     })
 
 });
 
 
-router.post('/edit-page/:slug', function (req, res) {
+router.post('/edit-category/:id', function (req, res) {
 
     req.checkBody('title', 'Title must have a value').notEmpty();
-    req.checkBody('content', 'Content must have a value').notEmpty();
 
     var title = req.body.title;
-    var slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
-    if (slug == "")
-        slug = title.replace(/\s+/g, '-').toLowerCase();
-    var content = req.body.content;
-    var id = req.body.id;
+    var slug = title.replace(/\s+/g, '-').toLowerCase();
+    var id = req.params.id;
 
     var errors = req.validationErrors();
 
     if (errors) {
-        res.render('admin/edit_page', {
+        res.render('admin/edit_category', {
             errors: errors,
             title: title,
-            slug: slug,
-            content: content,
             id: id
         });
     }
     else {
-        Page.findOne({ slug: slug, _id: { '$ne': id.trim()} }, function (err, page) {
-            if (page) {
-                req.flash('danger', 'Page slug exists, choose another.');
-                res.render('admin/edit_page', {
+        Category.findOne({ slug: slug, _id: { '$ne': id.trim()} }, function (err, category) {
+            if (category) {
+                req.flash('danger', 'Category title exists, choose another.');
+                res.render('admin/edit_category', {
                     title: title,
-                    slug: slug,
-                    content: content,
                     id: id
                 });  
             }
             else {
-                Page.findById(id.trim(), function (err, page) {
+                Category.findById(id.trim(), function (err, category) {
                     if (err)
                         return console.log(err);
-                    page.title = title;
-                    page.slug = slug;
-                    page.content = content;
-                    page.save(function (err) {
+                    category.title = title;
+                    category.slug = slug;
+                    category.save(function (err) {
                         if (err)
                             return console.log(err);
-                        req.flash('success', 'Page edited!');
-                        res.redirect('/admin/pages/edit-page/'+page.slug);
+                        req.flash('success', 'Category edited!');
+                        res.redirect('/admin/categories/edit-category/'+id);
                     });
                 })
 
@@ -157,13 +125,13 @@ router.post('/edit-page/:slug', function (req, res) {
 });
 
 
-router.get('/delete-page/:id',function(req,res){
-    Page.findByIdAndRemove(req.params.id,function(err){
+router.get('/delete-category/:id',function(req,res){
+    Category.findByIdAndRemove(req.params.id,function(err){
         if(err)
             return console.log(err);
 
-            req.flash('success', 'Page Deleted!');
-            res.redirect('/admin/pages/');
+            req.flash('success', 'Category Deleted!');
+            res.redirect('/admin/categories/');
     })
 })
 
