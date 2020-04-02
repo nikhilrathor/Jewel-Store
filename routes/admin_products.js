@@ -1,11 +1,30 @@
 var express = require('express');
 var router = express.Router();
-var mkdirp = require('mkdirp');
-var fs = require('fs-extra');
-var resizeImg = require('resize-img');
+var multer = require('multer');
+var path = require('path');
+var jwt = require('jsonwebtoken');
+
 
 var Product = require('../models/product');
 var Category = require('../models/category');
+
+router.use(express.static(__dirname+"./public"))
+
+if (typeof localStorage === "undefined" || localStorage === null) {
+    const LocalStorage = require('node-localstorage').LocalStorage;
+    localStorage = new LocalStorage('./scratch');
+  }
+
+  var Storage= multer.diskStorage({
+    destination:"./public/uploads/",
+    filename:(req,file,cb)=>{
+      cb(null,file.fieldname+"_"+Date.now()+path.extname(file.originalname));
+    }
+  });
+  
+  var upload = multer({
+    storage:Storage
+  }).single('file'); 
 
 router.get('/', function (req, res) {
     var count;
@@ -40,23 +59,21 @@ router.get('/add-product', function (req, res) {
 });
 
 
-router.post('/add-product', function (req, res) {
-    let imageFile;
-    if (!req.files)
-        imageFile = "";
-    else {
-        imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
+router.post('/add-product',upload,function (req, res) {
+
+    //console.log(req.files[0]);
+    if(req.file){
+        var imageFile = req.file.filename
+    } else {
+        var imageFile = 'noimage.png';
     }
-    //console.log(imageFile);
-    imageFile = imageFile.trim();
     req.checkBody('title', 'Title must have a value').notEmpty();
     req.checkBody('desc', 'Description must have a value').notEmpty();
     req.checkBody('price', 'Price must have a value').isDecimal();
-    console.log("hello");
-    req.checkBody('image', 'You must upload an image').isImage(imageFile);
-    console.log("bye");
     var title = req.body.title;
+    
     var slug = title.replace(/\s+/g, '-').toLowerCase();
+    
     var desc = req.body.desc;
     var price = req.body.price;
     var category = req.body.category;
@@ -101,35 +118,14 @@ router.post('/add-product', function (req, res) {
                 product.save(function (err) {
                     if (err)
                         return console.log(err);
-
-                    /* mkdirp('/public/product_image/' + product._id, function (err) {
-                        return console.log(err);
-                    })
-
-                    mkdirp('/public/product_image/' + product._id + '/gallery', function (err) {
-                        return console.log(err);
-                    })
-
-                    mkdirp('/public/product_image/' + product._id + '/gallery/thumbs', function (err) {
-                        return console.log(err);
-                    })
-
-                    if (imageFile != "") {
-                        var productImage = req.files.image;
-                        var path = "public/product_image/" + product._id + '/' + imageFile;
-
-                        productImage.mv(path, function (err) {
-                            return console.log(err);
-                        })
-                    } */
-
+                        
                     req.flash('success', 'Product added!');
                     res.redirect('/admin/products');
                 });
             }
         });
     }
-
+ 
 });
 
 router.post('/reorder-pages', function (req, res) {

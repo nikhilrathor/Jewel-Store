@@ -4,7 +4,7 @@
 <a href="/admin/products" class="btn btn-primary">Back to all products</a>
 <br><br>
 
-<form method="post" action="/admin/products/add-product" enctype="multipart/form-data">
+<form method="post" action="/admin/products/add-product" role="form" enctype="multipart/form-data">
 
     <div class="form-group">
         <label for="">Title</label>
@@ -28,7 +28,7 @@
     </div>
     <div class="form-group">
         <label for="">Image</label>
-        <input type="file" class="form-control" name="image" id="img">
+        <input type="file" class="form-control" name="file" id="img">
         <img src="#" id="imgPreview">
     </div>
     <button class="btn btn-default">Submit</button>

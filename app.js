@@ -1,11 +1,13 @@
+var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
 var mongoose = require('mongoose');
 var config = require('./config/database');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var expressValidator = require('express-validator');
-const ejsLint = require('ejs-lint');
 
 mongoose.connect(config.database, { useUnifiedTopology: true, useNewUrlParser: true });
 var db = mongoose.connection;
@@ -19,13 +21,19 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(logger('dev'));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 //set global eroors variable
 app.locals.errors = null;
+
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
+
+app.use(cookieParser());
 
 app.use(session({
   secret: 'keyboard cat',
