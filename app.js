@@ -28,6 +28,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 //set global eroors variable
 app.locals.errors = null;
 
+var Page = require('./models/page');
+
+Page.find(({})).sort({sorting:1}).exec(function(err,pages){
+  if(err){
+    console.log(err);
+  }else{
+    app.locals.pages = pages;
+  }
+})
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
