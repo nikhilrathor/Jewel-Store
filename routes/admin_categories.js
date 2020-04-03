@@ -53,6 +53,13 @@ router.post('/add-category', function (req, res) {
                 category.save(function (err) {
                     if (err)
                         return console.log(err);
+                    Category.find(function (err, categories) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            req.app.locals.categories = categories;
+                        }
+                    })
                     req.flash('success', 'Category added!');
                     res.redirect('/admin/categories');
                 });
@@ -67,7 +74,7 @@ router.get('/edit-category/:id', function (req, res) {
 
     Category.findById(req.params.id.trim(), function (err, category) {
         if (err) {
-            return console.log(err); 
+            return console.log(err);
         }
         res.render('admin/edit_category', {
             title: category.title,
@@ -96,13 +103,13 @@ router.post('/edit-category/:id', function (req, res) {
         });
     }
     else {
-        Category.findOne({ slug: slug, _id: { '$ne': id.trim()} }, function (err, category) {
+        Category.findOne({ slug: slug, _id: { '$ne': id.trim() } }, function (err, category) {
             if (category) {
                 req.flash('danger', 'Category title exists, choose another.');
                 res.render('admin/edit_category', {
                     title: title,
                     id: id
-                });  
+                });
             }
             else {
                 Category.findById(id.trim(), function (err, category) {
@@ -113,8 +120,15 @@ router.post('/edit-category/:id', function (req, res) {
                     category.save(function (err) {
                         if (err)
                             return console.log(err);
+                        Category.find(function (err, categories) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                req.app.locals.categories = categories;
+                            }
+                        })
                         req.flash('success', 'Category edited!');
-                        res.redirect('/admin/categories/edit-category/'+id);
+                        res.redirect('/admin/categories/edit-category/' + id);
                     });
                 })
 
@@ -125,13 +139,21 @@ router.post('/edit-category/:id', function (req, res) {
 });
 
 
-router.get('/delete-category/:id',function(req,res){
-    Category.findByIdAndRemove(req.params.id,function(err){
-        if(err)
+router.get('/delete-category/:id', function (req, res) {
+    Category.findByIdAndRemove(req.params.id, function (err) {
+        if (err)
             return console.log(err);
 
-            req.flash('success', 'Category Deleted!');
-            res.redirect('/admin/categories/');
+        Category.find(function (err, categories) {
+            if (err) {
+                console.log(err);
+            } else {
+                req.app.locals.categories = categories;
+            }
+        })
+
+        req.flash('success', 'Category Deleted!');
+        res.redirect('/admin/categories/');
     })
 })
 

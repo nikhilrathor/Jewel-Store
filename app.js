@@ -39,6 +39,17 @@ Page.find(({})).sort({sorting:1}).exec(function(err,pages){
 })
 
 
+var Category = require('./models/category');
+
+Category.find(function(err,categories){
+  if(err){
+    console.log(err);
+  }else{
+    app.locals.categories = categories;
+  }
+})
+
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
@@ -76,6 +87,7 @@ app.use(function (req, res, next) {
 });
 
 var pages = require('./routes/pages.js');
+var products = require('./routes/products.js');
 var adminPages = require('./routes/admin_pages.js');
 var adminCategories = require('./routes/admin_categories.js');
 var adminProducts = require('./routes/admin_products.js');
@@ -83,6 +95,7 @@ var adminProducts = require('./routes/admin_products.js');
 app.use('/admin/pages', adminPages);
 app.use('/admin/categories', adminCategories);
 app.use('/admin/products', adminProducts);
+app.use('/products', products);
 app.use('/', pages);
 
 var port = 3200;
