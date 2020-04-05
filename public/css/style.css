@@ -17,3 +17,12 @@ img.spi {
     width: 100%;
   height: auto;
 }
+
+img.cpi{
+    width: 100px;
+    height: 100px;
+}
+
+table.alignmiddle td {
+    vertical-align: middle !important;
+}
