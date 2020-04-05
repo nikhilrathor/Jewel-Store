@@ -92,6 +92,15 @@ router.get('/clear', function (req, res) {
 
     req.flash('success', 'Cart Cleared!');
     res.redirect('/cart/checkout');
+});
+
+
+router.get('/buynow', function (req, res) {
+
+  console.log("sfdc");
+  delete req.session.cart;
+  console.log("qwert");
+  res.sendStatus(200);
 })
 
 
