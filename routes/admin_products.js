@@ -4,6 +4,8 @@ var multer = require('multer');
 var path = require('path');
 var jwt = require('jsonwebtoken');
 const fs = require('fs');
+var auth = require('../config/auth');
+var isAdmin = auth.isAdmin;
 
 
 var Product = require('../models/product');
@@ -27,7 +29,7 @@ var upload = multer({
     storage: Storage
 }).single('file');
 
-router.get('/', function (req, res) {
+router.get('/', isAdmin, function (req, res) {
     var count;
     Product.countDocuments(function (err, c) {
         count = c;
@@ -41,7 +43,7 @@ router.get('/', function (req, res) {
     });
 });
 
-router.get('/add-product', function (req, res) {
+router.get('/add-product', isAdmin, function (req, res) {
 
     var title = "";
     var desc = "";
@@ -129,7 +131,7 @@ router.post('/add-product', upload, function (req, res) {
 
 });
 
-router.get('/edit-product/:id', function (req, res) {
+router.get('/edit-product/:id', isAdmin, function (req, res) {
 
     var errors;
 
@@ -234,7 +236,7 @@ router.post('/edit-product/:id', upload, function (req, res) {
 });
 
 
-router.get('/delete-product/:id', function (req, res) {
+router.get('/delete-product/:id', isAdmin, function (req, res) {
 
 
 

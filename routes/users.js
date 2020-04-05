@@ -30,6 +30,7 @@ router.post('/register', function (req, res) {
   if (errors) {
     res.render('register', {
       errors: errors,
+      user: null,
       title: "Register"
     })
   } else {
@@ -74,7 +75,7 @@ router.post('/register', function (req, res) {
 });
 
 router.get('/login', function (req, res) {
-  if(res.locals.user)
+  if (res.locals.user)
     res.redirect('/');
   res.render('login', {
     title: "Log in"
@@ -82,12 +83,20 @@ router.get('/login', function (req, res) {
 });
 
 router.post('/login', function (req, res, next) {
-  
-  passport.authenticate('local',{
-    successRedirect : "/",
-    failureRedirect : "/users/login",
-    failureFlash : true
-  })(req,res,next);
+
+  passport.authenticate('local', {
+    successRedirect: "/",
+    failureRedirect: "/users/login",
+    failureFlash: true
+  })(req, res, next);
+
+});
+
+router.get('/logout', function (req, res) {
+
+  req.logout();
+  req.flash('success', "You are now logged out!");
+  res.redirect('/users/login');
 
 });
 
