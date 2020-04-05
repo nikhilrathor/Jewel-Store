@@ -7,39 +7,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title><%= title %></title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
-  <nav class="navbar navbar-inverse ">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-          aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="/">Jewel Store</a>
-      </div>
-      <div id="navbar" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-          <% pages.forEach(function(page){%>
-          <% if(page.slug == "home"){ %>
-          <li><a href="/"><%= page.title %></a></li>
-          <% }else{ %>
-          <li><a href="<%= page.slug %>"><%= page.title %></a></li>
-          <% } %>
 
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">Jewel Store</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <% pages.forEach(function(page){%>
+          <% if(page.slug == "home"){ %>
+
+        <li class="nav-item ">
+          <a class="nav-link" href="/"><%= page.title %></a>
+        </li>
+        <% }else{ %>
+        <li class="nav-item">
+          <a class="nav-link" href="<%= page.slug %>"><%= page.title %></a>
+        </li>
+        <% } %>
           <% }); %>
-        </ul>
-      </div>
-      <!--/.nav-collapse -->
+      </ul>
     </div>
   </nav>
+
+
 
   <div class="container">
     <%- messages('messages', locals) %>

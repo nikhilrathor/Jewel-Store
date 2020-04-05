@@ -113,7 +113,7 @@ router.post('/add-product', upload, function (req, res) {
                     slug: slug,
                     desc: desc,
                     price: price2,
-                    category: category,
+                    category: category.trim(),
                     image: imageFile
                 });
                 product.save(function (err) {
@@ -204,7 +204,7 @@ router.post('/edit-product/:id', upload, function (req, res) {
                     p.slug = slug;
                     p.desc = desc;
                     p.price = price;
-                    p.category = category;
+                    p.category = category.trim();
                     p.image = imageFile;
 
                     p.save(function (err) {

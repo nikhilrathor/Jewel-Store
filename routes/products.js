@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var Product = require('../models/product');
+var Category = require('../models/category');
 
 router.get('/', function (req, res) {
   Product.find(function(err,products){
@@ -17,24 +18,27 @@ router.get('/', function (req, res) {
 })
 
 
-router.get('/:slug', function (req, res) {
+router.get('/:category', function (req, res) {
 
-  var slug = req.params.slug.trim();
-
-  Page.findOne({slug: slug},function(err,page){
+  var categorySlug = req.params.category;
+  Category.findOne({slug: categorySlug},function(err,c){
     if(err){
       console.log(err);
-    if(!page){
-      res.redirect('/');
     }
-    }else{
-      res.render('index', {
-        title: page.title,
-        content: page.content
-      });
-    }
+    Product.find({category: categorySlug },function(err,products){
+      if(err){
+      }else{
+        console.log(products);
+        res.render('cat_products', {
+          title: c.title,
+          products: products
+        });
+      }
+    })
   })
-  
-})
+  })
+
+ 
+
 
 module.exports = router;
