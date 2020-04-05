@@ -12,3 +12,8 @@ a.pa{
 .row.products .p {
     margin: 50px;
 }
+
+img.spi {
+    width: 100%;
+  height: auto;
+}

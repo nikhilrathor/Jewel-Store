@@ -30,7 +30,7 @@ router.get('/:slug', function (req, res) {
       content: page.content
     });
   }).catch((e)=>{
-    res.status(400).send(e);
+    res.status(400);
   });
 });
 

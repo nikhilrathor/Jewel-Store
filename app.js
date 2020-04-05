@@ -30,10 +30,10 @@ app.locals.errors = null;
 
 var Page = require('./models/page');
 
-Page.find(({})).sort({sorting:1}).exec(function(err,pages){
-  if(err){
+Page.find(({})).sort({ sorting: 1 }).exec(function (err, pages) {
+  if (err) {
     console.log(err);
-  }else{
+  } else {
     app.locals.pages = pages;
   }
 })
@@ -41,10 +41,10 @@ Page.find(({})).sort({sorting:1}).exec(function(err,pages){
 
 var Category = require('./models/category');
 
-Category.find(function(err,categories){
-  if(err){
+Category.find(function (err, categories) {
+  if (err) {
     console.log(err);
-  }else{
+  } else {
     app.locals.categories = categories;
   }
 })
@@ -56,12 +56,7 @@ app.use(bodyParser.json());
 
 app.use(cookieParser());
 
-app.use(session({
-  secret: 'keyboard cat',
-  resave: true,
-  saveUninitialized: true,
-  //cookie: { secure: true }
-}))
+
 
 app.use(expressValidator({
   errorFormatter: function (param, msg, value) {
@@ -86,7 +81,21 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+  //cookie: { secure: true }
+}))
+
+
+app.get('*', function (req, res, next) {
+  res.locals.cart = req.session.cart;
+  next();
+});
+
 var pages = require('./routes/pages.js');
+var cart = require('./routes/cart.js');
 var products = require('./routes/products.js');
 var adminPages = require('./routes/admin_pages.js');
 var adminCategories = require('./routes/admin_categories.js');
@@ -96,6 +105,7 @@ app.use('/admin/pages', adminPages);
 app.use('/admin/categories', adminCategories);
 app.use('/admin/products', adminProducts);
 app.use('/products', products);
+app.use('/cart', cart);
 app.use('/', pages);
 
 var port = 3200;
