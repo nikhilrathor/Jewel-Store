@@ -44,7 +44,7 @@
       </ul>
       <ul class="navbar-nav navbar-right">
         <li class="nav-item">
-          <a class="nav-link" href="/cart/checkout">My Cart  (
+          <a class="nav-link" href="/cart/checkout">My Cart (
             <% if(typeof cart !=='undefined'){ %>
             <%= cart.length %>
             <% }else{ %>
@@ -52,6 +52,15 @@
             <% } %>
             )</a>
         </li>
+        <% if(user){ %>
+        <li class="nav-item"><a class="nav-link" href="/users/logout">Hi,<%= user.username %> ( logout )</a></li>
+        <% }else{ %>
+        <li class="nav-item"><a class="nav-link" href="/users/register">Register</a></li>
+        <li class="nav-item"><a class="nav-link" href="/users/login">Log In</a></li>
+        <% } %>
+        <% if(user && user.admin == 1){ %>
+        <li class="nav-item"><a class="nav-link" href="/admin/pages">Admin Area</a></li>
+        <% }%>
       </ul>
     </div>
   </nav>
@@ -61,6 +70,15 @@
   <div class="container">
     <%- messages('messages', locals) %>
 
+    <% if (errors) {%>
+    <% errors.forEach(function(error) { %>
+    <div class="alert alert-danger">
+      <%= error.msg %>
+    </div>
+    <% }) %>
+    <% } %>
+
+    <br><br>
     <div class="row">
       <div class="col-xs-12 col-md-3">
         <h3>Categories</h3>

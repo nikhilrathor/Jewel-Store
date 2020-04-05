@@ -97,9 +97,8 @@ router.get('/clear', function (req, res) {
 
 router.get('/buynow', function (req, res) {
 
-  console.log("sfdc");
   delete req.session.cart;
-  console.log("qwert");
+
   res.sendStatus(200);
 })
 

@@ -40,13 +40,16 @@ router.get('/:category', function (req, res) {
 
 router.get('/:category/:product',function(req,res){
 
+  var loggedIn = (req.isAuthenticated()) ? true : false;
+
   Product.findOne({slug: req.params.product}, function(err, product){
     if(err){
       console.log(err);
     }else{
       res.render('product',{
         title: product.title,
-        p: product
+        p: product,
+        loggedIn: loggedIn
       })
     }
   })
