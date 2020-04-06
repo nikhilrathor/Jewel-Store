@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var bcrypt = require('bcryptjs');
+var Order = require('../models/orders');
+var auth = require('../config/auth');
+var isUser = auth.isUser;
 
 var User = require('../models/user');
 
@@ -92,12 +95,29 @@ router.post('/login', function (req, res, next) {
 
 });
 
-router.get('/logout', function (req, res) {
+router.get('/orders', isUser, function (req, res) {
+  console.log(res.locals.user.username);
+
+  Order.find({user: res.locals.user.username},function (err, orders) {
+    if (err) {
+        console.log(err);
+    } else {
+      console.log(orders.length);
+      console.log(orders.orderdetails);
+        res.render('orders',{
+          title: "My Orders",
+          orders: orders
+        })
+    }
+});
+});
+
+router.get('/logout', isUser, function (req, res) {
 
   req.logout();
   req.flash('success', "You are now logged out!");
   res.redirect('/users/login');
-
+  
 });
 
 module.exports = router;

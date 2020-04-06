@@ -1,0 +1,42 @@
+<%- include('./_layouts/header') %>
+
+
+<h1 class="page-title">My Orders</h1>
+<br><br>
+<% if (orders.length >0){ %>
+<table class="table table-striped alignmiddle">
+
+    <tr>
+        <th>Image</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+    </tr>
+    <% orders.forEach(function(details){ %>
+    <% var total = 0; %>
+    <% (details.orderdetails).forEach(function(order){ %>
+    <% var sub = order.qty * order.price %>
+    <% total += sub %>
+    <tr>
+        <td><img class="cpi" src="<%= order.image  %> " alt=""></td>
+        <td><%= order.title %> </td>
+        <td><%= order.price %> </td>
+        <td><%= order.qty %> </td>
+        <td>$<%= sub %> </td>
+    </tr>
+    <tr>
+    </tr>
+    <% }); %>
+    <td colspan="3" align="right" ><b>Satus: <%= details.status %> </b></td>
+    <td colspan="5" align="right" id="pmt"><b>Total $<%= total %> </b></td>
+    <% }); %>
+    
+</table>
+
+
+<% } else{%>
+<h3 class="text-center">No Orders Yet!  Start Shopping</h3>
+<% } %>
+
+<%- include('./_layouts/footer') %>

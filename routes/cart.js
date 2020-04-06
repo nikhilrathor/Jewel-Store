@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var Product = require('../models/product');
+var Order = require('../models/orders');
 
 router.get('/add/:product', function (req, res) {
 
@@ -97,9 +98,39 @@ router.get('/clear', function (req, res) {
 
 router.get('/buynow', function (req, res) {
 
-  delete req.session.cart;
+  //delete req.session.cart;
 
-  res.sendStatus(200);
+  var cart = req.session.cart;
+  var a = [];
+
+  for (var i = 0; i < req.session.cart.length; i++) {
+
+    var b = {
+      image: cart[i].image,
+      title: cart[i].title,
+      price: cart[i].price,
+      qty: cart[i].qty
+    }
+    a.push(b);
+  }
+
+  var order = new Order({
+    user: res.locals.user.username,
+    orderdetails: a,
+    status: "Placed"
+  });
+
+  order.save(function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      delete req.session.cart;
+      req.flash('success', "Order Placed!");
+      res.redirect('/users/orders');
+    }
+  })
+
+  //res.sendStatus(200);
 })
 
 
