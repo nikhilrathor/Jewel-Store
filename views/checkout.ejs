@@ -1,5 +1,4 @@
 <%- include('./_layouts/header') %>
-
 <% if (typeof cart !== "undefined"){ %>
 
 <h1 class="page-title">My Cart</h1>
@@ -33,53 +32,66 @@
     </tr>
     <% }); %>
     <tr>
-        <td colspan="6" align="right"><b>Total:</b>$<%= total %> </td>
+        <td colspan="6" align="right" id="pmt"><b>Total $</b><%= total %> </td>
     </tr>
     <tr>
         <td colspan="5" align="right">
             <a class="clearcart btn btn-danger" href="/cart/clear">Clear Cart</a>
         </td>
         <td colspan="5" align="right">
-            <a class="btn btn-primary buynow" href="#">Buy Now</a>
+            <div id="paypal-button-container"></div>
         </td>
     </tr>
 
 </table>
 
-<form class="pp" action="https://www.sandbox.paypal.com/us/cgi-bin/webscr" method="post">
-    <input type="hidden" name="cmd" value="_cart">
-    <input type="hidden" name="upload" value="1">
-    <input type="hidden" name="business" value="nikhilrathor01@gmail.com">
-    <% var num = 0; %>
-    <% cart.forEach(function(p){ %>
-    <% num++; %>
-    <input type="hidden" name="item_name_<%= num %>" value="<%= p.title %>">
-    <input type="hidden" name="amount_<%= num %>" value="<%= p.price %>">
-    <input type="hidden" name="quantity_<%= num %>" value="<%= p.qty %>">
-    <% }); %>
-    <input type="hidden" name="currency_code" value="USD">
-    <input type="hidden" name="amount" value="<%= total %> ">
-    <input type="image" id="paypal" src="http://www.paypal.com/en_US/i/btn/x-click-but01.gif" name="submit"
-        alt="Make payments with PayPal - it's fast, free and secure!">
-</form>
 
 <% } else{%>
 <h3 class="text-center">Your cart is empty.</h3>
 <% } %>
 
+<script
+    src="https://www.paypal.com/sdk/js?client-id=AUjG7zpZb4dToGKFFJGFowHNgO8M5sHhTMfsfHUieyU5YEtjWba0u4ObWOJJTOFlVGgI0a8hkUug-Dkm&currency=USD"></script>
+
 <script>
-
     $(function () {
+        var x = document.getElementById("pmt").innerText.substr(7);
 
-        $('a.buynow').click(function (e) {
-            e.preventDefault();
-            $.get('/cart/buynow',function(){
-                $('#paypal').click();
-                $('.ajaxbg').show();
-            })
-        });
+    paypal.Buttons({
+        // Set up the transaction
+        createOrder: function (data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: x
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function (details) {
+                // Show a success message to the buyer
+                alert('Transaction completed by ' + details.payer.name.given_name + '!')
+                window.location.href = "http://localhost:3200/cart/buynow";
+                
+            });
+        },
+
+        onCancel: function (data) {
+            // Show a cancel page, or return to cart
+            window.location.href = "http://localhost:3200/cart/checkout";
+          },
+
+          onError: function (err) {
+            // Show an error page here, when an error occurs
+            window.location.href = "http://localhost:3200/cart/checkout";
+          }
+
+
+    }).render('#paypal-button-container');
     });
 
 </script>
-
 <%- include('./_layouts/footer') %>
