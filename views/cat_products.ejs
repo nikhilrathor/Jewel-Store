@@ -1,16 +1,20 @@
 <%- include('./_layouts/header') %>
 
-<div class="row products">
+<div class="row row-cols-1 row-cols-md-3">
     <% products.forEach(function(p){ %>
-    <div class="col-xs-12 col-mid-4 p">
-        <a class="pa" href="/products/<%= p.category %>/<%= p.slug %>">
-            <img class="pimage" src="/uploads/<%= p.image %>" alt="">
+    <div class="col mb-4">
+      <div class="card">
+        <a class="card-link" href="/products/<%= p.category %>/<%= p.slug %>">
+          <img src="/uploads/<%= p.image %>" class="card-img-top" alt="...">
         </a>
-        <h3><%= p.title %></h3>
-        <h4>$<%= p.price %> </h4>
-        <a class="vd" href="/products/<%= p.category %>/<%= p.slug %>">View Details</a>
+        <div class="card-body">
+          <h4 class="card-title"><%= p.title %></h4>
+          <h5 class="card-price">₹<%= p.price %> </h5>
+          <a class="card-link " href="/products/<%= p.category %>/<%= p.slug %>">View Details</a>
+        </div>
+      </div>
     </div>
     <% }); %>
-</div>
+  </div>
 
 <%- include('./_layouts/footer') %>
