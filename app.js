@@ -118,7 +118,7 @@ app.use('/cart', cart);
 app.use('/users', users);
 app.use('/', pages);
 
-const port = 3200;
+const port = process.env.PORT || 3200;
 app.listen(port, function () {
   console.log("Server started on port" + port);
 })
