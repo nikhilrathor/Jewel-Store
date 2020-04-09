@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var expressValidator = require('express-validator');
 var passport = require('passport');
+var MongoStore = require('connect-mongo')(session);
 
 mongoose.connect(config.database, { useUnifiedTopology: true, useNewUrlParser: true });
 var db = mongoose.connection;
@@ -85,7 +86,9 @@ app.use(function (req, res, next) {
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false,
+  store: new MongoStore({ mongooseConnection: mongoose.connection}),
+  cookie: { maxAge: 180 * 60 * 1000}
   //cookie: { secure: true }
 }))
 
