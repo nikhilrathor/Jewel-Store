@@ -11,12 +11,14 @@ var expressValidator = require('express-validator');
 var passport = require('passport');
 var MongoStore = require('connect-mongo')(session);
 
-mongoose.connect(config.database, { useUnifiedTopology: true, useNewUrlParser: true });
+const uri = "mongodb+srv://nikhil:qwerty123@cluster0-kudbv.gcp.mongodb.net/jewel-store?retryWrites=true&w=majority";
+
+mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
   console.log('connected to mongodb');
-});
+}); 
 
 var app = express();
 
